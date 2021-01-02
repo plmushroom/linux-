@@ -28,9 +28,9 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted
 
 #deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse source /etc/network/interfaces.d/*
 
+sudo apt-get update
 
-
-（4）sudo apt-get install ssh-server
+（4）sudo apt-get install openssh-server
 
 （5）sudo vi /etc/network/interfaces
 
@@ -204,6 +204,10 @@ ping web.oasis.com
 host 192.168.56.101
 ```
 
+配置网卡的dns：
+
+配置dns为192.168.56.101
+
 # 5 Nginx
 
 - 安装
@@ -249,6 +253,24 @@ listen [::]:80;
 
 root /var/www/race;
 server_name race.oasis.com;
+
+
+sudo vi /etc/nginx/sites-available/shining
+# 删掉原本的default_server
+listen 80;
+listen [::]:80;
+
+root /var/www/shining;
+server_name shining.oasis.com;
+
+
+udo vi /etc/nginx/sites-available/game
+# 删掉原本的default_server
+listen 80;
+listen [::]:80;
+
+root /var/www/game;
+server_name game.oasis.com;
 ```
 
 - 建立软连接
@@ -309,6 +331,8 @@ sudo vi /etc/nginx/sites-available/race
 ```
 
 添加（原来的保留，只是附加）
+
+放在server外面，重写的一个server
 
 ```
 server {
@@ -517,7 +541,7 @@ sudo DEBIAN_PRIORITY=low apt install postfix
 ```
 
 - **General type of mail configuration?（一般邮件配置类型？）**：这个我们选择**Internet Site，**因为这符合我们的基础架构需求。
-- **System mail name（系统邮件名称）**：这是用于在仅给出地址的帐户部分时构造有效电子邮件地址的基本域。 例如，我们服务器的主机名是`mail.example.com`，但我们可能希望将系统邮件名称设置为`example.com`，以便给定用户名`user1`，Postfix将使用地址`user1@example.com`。
+- **System mail name（系统邮件名称）**：这是用于在仅给出地址的帐户部分时构造有效电子邮件地址的基本域。 例如，我们服务器的主机名是`mail.oasis.com`，但我们可能希望将系统邮件名称设置为oasis.com`，以便给定用户名`user1`，Postfix将使用地址`user1@oasis.com。
 - **（Root and postmaster mail recipient）root和邮件管理员**：这是Linux的帐户将被转发邮件的收件人是`root@`和`postmaster@`。使用您的主帐户。在我们的例子中，**sammy**。
 - **（Other destinations to accept mail for）接受邮件的其他目的地**：这定义了此Postfix实例将接受的邮件目的地。如果您需要添加此服务器负责接收来自其他域名的邮件，请在此处添加；默认情况下是可以正常工作的。
 - **（Force synchronous updates on mail queue?）强制对邮件队列进行同步更新？**：由于您可能正在使用日志文件系统，因此请在此处选择**No**。
