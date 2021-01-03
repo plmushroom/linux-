@@ -1,4 +1,7 @@
 （1）打开网络适配器，启用虚拟网卡，设置virtualbox为双网卡，第一个为nat，第二个hostonly网卡
+  
+  
+  设置虚拟机网卡的ipv4的ip为192.168.0.1 DNS为192.168.0.101
 
 （2）首先进入修改vim，不然vim会乱跳：
 sudo vi /etc/vim/vimrc.tiny
