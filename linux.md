@@ -46,7 +46,7 @@ iface enp0s3 inet dhcp
 
 auto enp0s8
 iface enp0s8 inet static
-address 192.168.56.101
+address 192.168.0.101
 netmask 255.255.255.0
 
 /etc/init.d/networking restart
@@ -77,7 +77,7 @@ neo ALL=(ALL:ALL) ALL
 - 换用cmd登录(方便复制粘贴)
 
 ```
-ssh neo@192.168.56.101
+ssh neo@192.168.0.101
 ```
 
 # 4 Bind9
@@ -109,7 +109,7 @@ zone "oasis.com"{
 };
 
 
-zone "56.168.192.in-addr.arpa"{
+zone "0.168.192.in-addr.arpa"{
 
     type master;
 
@@ -140,14 +140,14 @@ $ORIGIN oasis.com.
 
 @ IN NS ns
 
-@ IN A 192.168.56.101
+@ IN A 192.168.0.101
 
-mail IN A 192.168.56.101
-web IN A 192.168.56.101
-ns IN A 192.168.56.101
-race IN A 192.168.56.101
-shining IN A 192.168.56.101
-game IN A 192.168.56.101
+mail IN A 192.168.0.101
+web IN A 192.168.0.101
+ns IN A 192.168.0.101
+race IN A 192.168.0.101
+shining IN A 192.168.0.101
+game IN A 192.168.0.101
 ```
 
 - 配置3
@@ -201,12 +201,12 @@ sudo /etc/init.d/bind9 restart
 # 正向
 ping web.oasis.com
 # 反向
-host 192.168.56.101
+host 192.168.0.101
 ```
 
 配置网卡的dns：
 
-配置dns为192.168.56.101
+配置dns为192.168.0.101
 
 # 5 Nginx
 
@@ -526,23 +526,23 @@ sudo vi /etc/nginx/sites-available/game
 location / {
                 # First attempt to serve request as file, then
                 # as directory, then fall back to displaying a 404.
-                proxy_pass http://192.168.56.101:8080;
+                proxy_pass http://192.168.0.101:8080;
                 try_files $uri $uri/ =404;
         }
        
   location ~* \.(css|js|txt)$ {
-        proxy_pass http://192.168.56.101:8080;
+        proxy_pass http://192.168.0.101:8080;
         expires 10d;
         }
 
 location ~* \.(html|gif|jpg|jpeg|png|bmp|swf|ico|flv|mp3|wav|wmv)$ {
-        proxy_pass http://192.168.56.101:8080;
+        proxy_pass http://192.168.0.101:8080;
         expires 15d;
         access_log      off;
 }
 
 location ~* \.(htacess|tar.gz|tar|zip|sql)$ {
-        return http://192.168.56.101:8080;
+        return http://192.168.0.101:8080;
 }
 
 ```
@@ -557,8 +557,8 @@ sudo DEBIAN_PRIORITY=low apt install postfix
 ```
 
 - **General type of mail configuration?（一般邮件配置类型？）**：这个我们选择**Internet Site，**因为这符合我们的基础架构需求。
-- **System mail name（系统邮件名称）**：这是用于在仅给出地址的帐户部分时构造有效电子邮件地址的基本域。 例如，我们服务器的主机名是`mail.oasis.com`，但我们可能希望将系统邮件名称设置为oasis.com`，以便给定用户名`user1`，Postfix将使用地址`user1@oasis.com。
-- **（Root and postmaster mail recipient）root和邮件管理员**：这是Linux的帐户将被转发邮件的收件人是`root@`和`postmaster@`。使用您的主帐户。在我们的例子中，**sammy**。
+- **System mail name（系统邮件名称）**：这是用于在仅给出地址的帐户部分时构造有效电子邮件地址的基本域。 例如，我们服务器的主机名是`mail.oasis.com`，但我们可能希望将系统邮件名称设置为oasis.com`，以便给定用户名`user1`，Postfix将使用地址`user1@oasis.com。  oasis.com
+- **（Root and postmaster mail recipient）root和邮件管理员**：这是Linux的帐户将被转发邮件的收件人是`root@`和`postmaster@`。使用您的主帐户。在我们的例子中，**neo**。
 - **（Other destinations to accept mail for）接受邮件的其他目的地**：这定义了此Postfix实例将接受的邮件目的地。如果您需要添加此服务器负责接收来自其他域名的邮件，请在此处添加；默认情况下是可以正常工作的。
 - **（Force synchronous updates on mail queue?）强制对邮件队列进行同步更新？**：由于您可能正在使用日志文件系统，因此请在此处选择**No**。
 - **（Local networks）本地网络**：这是您的邮件服务器配置为中继邮件的网络列表。默认应适用于大多数方案。如果您选择修改它，请确保对网络范围有非常严格的限制
@@ -658,7 +658,7 @@ sudo ufw status numbered
 
 # 11 RAID 1
 
-- 添加2块100MB的虚拟硬盘
+- 添加2块1GB的虚拟硬盘
 - 查看磁盘
 
 ```
@@ -674,8 +674,8 @@ sudo mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/
 - 挂载（若挂载失败报错，可能是没有格式化，可以先格式化mkfs.ext4 /dev/md0在mount上去）
 
 ```
-sudo mkdir -p /mnt/md0
-sudo mount /dev/md0 /mnt/md0
+sudo mkdir -p /mnt/md1
+sudo mount /dev/md0 /mnt/md1
 ```
 
 查看
@@ -689,7 +689,7 @@ df -h -x devtmpfs -x tmpfs
 ```
 sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
 sudo update-initramfs -u
-echo '/dev/md0 /mnt/md0 ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab
+echo '/dev/md0 /mnt/md1 ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab
 ```
 
 # 12 交卷准备
