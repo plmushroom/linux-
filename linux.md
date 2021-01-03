@@ -529,6 +529,22 @@ location / {
                 proxy_pass http://192.168.56.101:8080;
                 try_files $uri $uri/ =404;
         }
+       
+  location ~* \.(css|js|txt)$ {
+        proxy_pass http://192.168.56.101:8080;
+        expires 10d;
+        }
+
+location ~* \.(html|gif|jpg|jpeg|png|bmp|swf|ico|flv|mp3|wav|wmv)$ {
+        proxy_pass http://192.168.56.101:8080;
+        expires 15d;
+        access_log      off;
+}
+
+location ~* \.(htacess|tar.gz|tar|zip|sql)$ {
+        return http://192.168.56.101:8080;
+}
+
 ```
 
 # 9 邮件
