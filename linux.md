@@ -655,7 +655,7 @@ lsblk -o NAME,SIZE,FSTYPE,TYPE,MOUNTPOINT
 sudo mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
 ```
 
-- 挂载
+- 挂载（若挂载失败报错，可能是没有格式化，可以先格式化mkfs.ext4 /dev/md0在mount上去）
 
 ```
 sudo mkdir -p /mnt/md0
