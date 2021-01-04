@@ -74,7 +74,7 @@ sudo adduser neo
 
 ```
 sudo visudo
-%neo ALL=(ALL:ALL) ALL
+neo ALL=(ALL:ALL) ALL
 ```
 
 - 换用cmd登录(方便复制粘贴)
