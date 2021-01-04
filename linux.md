@@ -453,30 +453,47 @@ sudo systemctl restart nginx
 
 # 8 Java 、Tomcat 及 nginx代理
 
-- 安装jdk
+安装jdk
 
-```
+
 cd /tmp
+
 wget http://172.18.5.74/download/jdk-8u112-linux-x64.tar.gz
+
 sudo mkdir /usr/lib/java
+
 sudo tar -C /usr/lib/java -xzf jdk-8u112-linux-x64.tar.gz
+
+
+
+sudo vi ~/.profile 
+
+
+PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+JAVA_HOME=/usr/lib/java/jdk1.8.0_112
+JRE_HOME=${JAVA_HOME}/jre
+CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+TOMCAT_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+CATALINA_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+
+
+
+source ~/.profile 
+
+
+
 sudo vi  ~/.bashrc
-```
 
-添加
 
-```
 export JAVA_HOME=/usr/lib/java/jdk1.8.0_112
 export JRE_HOME=${JAVA_HOME}/jre
 export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
 export PATH=${JAVA_HOME}/bin:$PATH
-```
+export TOMCAT_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+export CATALINA_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
 
-**重启**
 
-```
-reboot
-```
+source ~/.bashrc
 
 测试
 
@@ -484,43 +501,102 @@ reboot
 java -version
 ```
 
-- 安装tomcat
+安装tomcat
 
-```
+
+
 cd /tmp
+
 wget https://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.61/bin/apache-tomcat-8.5.61.tar.gz
-mkdir ~/tomcat
-cp apache-tomcat-8.5.61.tar.gz ~/tomcat/
-cd ~/tomcat/
-tar -zxvf apache-tomcat-8.5.61.tar.gz
-```
 
-- 改环境变量
+sudo mkdir /var/www/game/tomcat
 
-```
+sudo cp apache-tomcat-8.5.61.tar.gz /var/www/game/tomcat
+
+cd /var/www/game/tomcat
+
+sudo tar -zxvf apache-tomcat-8.5.61.tar.gz
+
+
+
+改环境变量
+
+
+
 sudo vi /etc/profile
-export TOMCAT_HOME=/home/neo/tomcat/apache-tomcat-8.5.61
-export CATALINA_HOME=/home/neo/tomcat/apache-tomcat-8.5.61
-```
 
-- 启动Tomcat
 
-```
-cd ~/tomcat/apache-tomcat-8.5.61/bin
- ./startup.sh
-```
+JAVA_HOME=/usr/lib/java/jdk1.8.0_112
+JRE_HOME=${JAVA_HOME}/jre
+CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+PATH=${JAVA_HOME}/bin:$PATH
+TOMCAT_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+CATALINA_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
 
-- tomcat自启 （用户级别）
 
-```
-sudo vi ~/.bashrc
-```
+source /etc/profile
 
-add
 
-```
-/home/neo/tomcat/apache-tomcat-8.5.61/bin/startup.sh
-```
+
+
+启动Tomcat
+
+
+sudo -s
+bash /var/www/game/tomcat/apache-tomcat-8.5.61/bin/startup.sh
+
+
+
+tomcat自启 （用户级别）
+
+
+sudo vi /var/www/game/tomcat/apache-tomcat-8.5.61/bin/startup.sh
+
+
+
+export JAVA_HOME=/usr/lib/java/jdk1.8.0_112
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+export TOMCAT_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+export CATALINA_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+
+
+
+
+sudo vi /var/www/game/tomcat/apache-tomcat-8.5.61/bin/shutdown.sh
+
+
+
+
+export JAVA_HOME=/usr/lib/java/jdk1.8.0_112
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+export TOMCAT_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+export CATALINA_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+
+
+
+sudo vi /etc/rc.local
+
+
+
+export JAVA_HOME=/usr/lib/java/jdk1.8.0_112
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+export TOMCAT_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+export CATALINA_HOME=/var/www/game/tomcat/apache-tomcat-8.5.61
+/var/www/game/tomcat/apache-tomcat-8.5.61/bin/startup.sh
+exit 0
+
+
+
+
+reboot
+
+
 
 - 代理 
 
@@ -680,14 +756,14 @@ lsblk -o NAME,SIZE,FSTYPE,TYPE,MOUNTPOINT
 - 创建md0 sdb sdc根据实际情况换
 
 ```
-sudo mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+sudo mdadm --create --verbose /dev/md1 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
 ```
 
 - 挂载（若挂载失败报错，可能是没有格式化，可以先格式化mkfs.ext4 /dev/md0在mount上去）
 
 ```
 sudo mkdir -p /mnt/md1
-sudo mount /dev/md0 /mnt/md1
+sudo mount /dev/md1 /mnt/md1
 ```
 
 查看
