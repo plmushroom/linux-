@@ -554,6 +554,8 @@ location ~* \.(htacess|tar.gz|tar|zip|sql)$ {
 
 ```
 
+sudo service nginx restart
+
 # 9 邮件
 
 - 安装
