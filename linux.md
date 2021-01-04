@@ -576,14 +576,23 @@ sudo DEBIAN_PRIORITY=low apt install postfix
 - **（Internet protocols to use）要使用的Internet协议**：我们会选择`all`。
 
 ```
-sudo apt install mailutils
+//sudo apt install mailutils
 ```
+
+
+下载sendmail
+sudo apt-get install sendmail
+
 
 - 发邮件
 
 ```
-echo 'it is only a test' | mail -s "test eamil" neo@oasis.com 
+//echo 'it is only a test' | mail -s "test eamil" neo@oasis.com 
 ```
+
+echo -e "Subject: Test Mail\nThis is the mail body" > /tmp/send-mail.txt
+
+ sendmail neo@oasis.com < send-mail.txt
 
 # 10 MySQL
 
