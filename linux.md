@@ -602,12 +602,12 @@ echo -e "Subject: Test Mail\nThis is the mail body" > /tmp/send-mail.txt
 sudo apt install mysql-server
 ```
 
-- 改端口
+- 改端口(不需要了)
 
 ```
-sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
-port = 3366
-sudo systemctl restart mysql
+//sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+//port = 3366
+//sudo systemctl restart mysql
 ```
 
 - 创建数据库
