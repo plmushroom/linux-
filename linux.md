@@ -522,10 +522,14 @@ add
 /home/neo/tomcat/apache-tomcat-8.5.61/bin/startup.sh
 ```
 
-- 代理
+- 代理 
+
 
 ```
 sudo vi /etc/nginx/sites-available/game
+
+把原来的location /的要删除  
+添加下面的在server里面
 location / {
                 # First attempt to serve request as file, then
                 # as directory, then fall back to displaying a 404.
@@ -538,7 +542,7 @@ location / {
         expires 10d;
         }
 
-location ~* \.(html|gif|jpg|jpeg|png|bmp|swf|ico|flv|mp3|wav|wmv)$ {
+location ~* \.(html|gif|jpg|jpeg|png|bmp|swf|ico|flv|mp3|wav|wmv|svg)$ {
         proxy_pass http://192.168.0.101:8080;
         expires 15d;
         access_log      off;
