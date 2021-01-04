@@ -52,7 +52,7 @@ iface enp0s8 inet static
 address 192.168.0.101
 netmask 255.255.255.0
 
-/etc/init.d/networking restart
+sudo /etc/init.d/networking restart
 
 重启，ifconfig查看，网卡启动成功，主机可以ping通
 
