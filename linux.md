@@ -441,7 +441,7 @@ location ~ \.php$ {
 ```
 sudo vi /var/www/shining/index.php
 <?php
-phpinfo();
+phpinfo(INFO_LICENSE);
 ?>
 ```
 
